@@ -1,182 +1,3 @@
-<?php if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start(); ?>
-
-<?php
-    
-
- function loadVideo($type, $id)
- {
- $videoId = $_GET['video'];
-     if($type == "video")
-     echo '
-     <script> 
-         function setHeight()
-         {
-             //// document.getElementById(\'frame\').height = window.innerheight;
-             //// document.getElementById(\'frame\').width = window.innerwidth;
-             //// alert(\'exec\');
-         }
-     </script>
-     ' .
-     '<iframe id="frame" style="height: 97%; width: 80%" src="http://www.youtube.com/embed/' . $id . '?html5=1&modestbranding=1" onload="setHeight()"          frameborder="0" allowfullscreen="true" />';
-
- else
-     if($type == "image")
-     {
-         $path = 'http://rushabhgosar.com/' . $_GET['id'];          
-         echo '<img style="height:97%;width=80%;" onmousedown"return false;" onmouseclick="return false;" onmousedrag="return false;" oncontextmenu="return false;" src="' . $path . '" />';
-     }
- }
-
-         
-function getBrowser2() 
-{ 
-    $host="rus1311807231982.db.10917081.hostedresource.com";
-    $user="rus1311807231982";
-    $pass="Rushabh%1";
-    $db="rus1311807231982";
-    $u_agent = $_SERVER['HTTP_USER_AGENT']; 
-    $bname = 'Unknown';
-    $platform = 'Unknown';
-    $version= "";
-
-    //First get the platform?
-    if (preg_match('/linux/i', $u_agent)) {
-        $platform = 'linux';
-    }
-    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-        $platform = 'mac';
-    }
-    elseif (preg_match('/windows|win32/i', $u_agent)) {
-        $platform = 'windows';
-    }
-    
-    // Next get the name of the useragent yes seperately and for good reason
-    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) 
-    { 
-        $bname = 'Internet Explorer'; 
-        $ub = "MSIE"; 
-    } 
-    elseif(preg_match('/Firefox/i',$u_agent)) 
-    { 
-        $bname = 'Mozilla Firefox'; 
-        $ub = "Firefox"; 
-    } 
-    elseif(preg_match('/Chrome/i',$u_agent)) 
-    { 
-        $bname = 'Google Chrome'; 
-        $ub = "Chrome"; 
-    } 
-    elseif(preg_match('/Safari/i',$u_agent)) 
-    { 
-        $bname = 'Apple Safari'; 
-        $ub = "Safari"; 
-    } 
-    elseif(preg_match('/Opera/i',$u_agent)) 
-    { 
-        $bname = 'Opera'; 
-        $ub = "Opera"; 
-    } 
-    elseif(preg_match('/Netscape/i',$u_agent)) 
-    { 
-        $bname = 'Netscape'; 
-        $ub = "Netscape"; 
-    } 
-    
-    // finally get the correct version number
-    $known = array('Version', $ub, 'other');
-    $pattern = '#(?<browser>' . join('|', $known) .
-    ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-    if (!preg_match_all($pattern, $u_agent, $matches)) {
-        // we have no matching number just continue
-    }
-    
-    // see how many we have
-    $i = count($matches['browser']);
-    if ($i != 1) {
-        //we will have two since we are not using 'other' argument yet
-        //see if version is before or after the name
-        if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
-            $version= $matches['version'][0];
-        }
-        else {
-            $version= $matches['version'][1];
-        }
-    }
-    else {
-        $version= $matches['version'][0];
-    }
-    
-    // check if we have a number
-    if ($version==null || $version=="") {$version="?";}
- 
-                $date = date('Y-m-d H:i:s');
-                $country= file_get_contents('http://api.hostip.info/get_html.php?ip='.$_SERVER["REMOTE_ADDR"]);
-                mysql_connect($host, $user, $pass) OR DIE (mysql_error());
-                $host_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-				$path = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-                mysql_select_db ($db) OR DIE ("Unable to select db".mysql_error());
-                $sql = "INSERT INTO VisitorInfo 
-                (IP,Date,Country,Browser,HostName,compName,URL)
-                VALUES
-                ('{$_SERVER["REMOTE_ADDR"]}', '{$date}', '{$country}', '{($u_agent . $bname . $version . $platform . $pattern)}' , '{$host_name}', '{$_GET['name']}', '{$path}') ";
-                mysql_query($sql) or die("Error in Query: " . mysql_error());
-            
-                // insert the image
-                mysql_query($sql) or die("Error in Query: " . mysql_error());
-                $msg='<p>Total Visits on this Website - '. ((int)((int)mysql_insert_id() / 4)).'</p>';
-                //echo '<strong>' . $msg . '</strong>';           
-                }
-
-
-    if(isset($_GET['type']))  
-    {      
-	if(isset($_GET['id']))
-	{
-        $type = $_GET['type'];
-        $id = $_GET['id'];
-        loadVideo($_GET['type'], $_GET['id']);
-        getBrowser2();
-        echo loadAd();
-        die();
-	}
-	else
-	if(isset($_GET['p']) && $_GET['type'] == 'img')
-	{
-	if($_GET['p'] == '1')
-	echo '<img src="http://global3.memecdn.com/ahh-so-its-not-just-me_o_134687.webp" />' . loadAd();
-	die();
-	}
-    }
-
-  if(isset($_GET['rdr']))
-	{
-		$_GET['rdr'] = '';
-		echo '<meta http-equiv="refresh" content="5; url=http://rushabhgosar.com/api/blog/">'. loadAd();;		
-	}
-
-	else
-		if(isset($_GET['demo']))
-{
-echo '<meta http-equiv="Refresh" content="0.25; url=http://m.youtube.com/watch?v=Dh4rer9rmnU">';
-}
-
-function loadAd()
-{
-echo '<script type="text/javascript"><!--
-    google_ad_client = "ca-pub-7528245801897179";
-    /* Blog sidebar */
-    google_ad_slot = "4352707794";
-    google_ad_width = 120;
-    google_ad_height = 600;
-    //-->
-        </script>
-        <script type="text/javascript"
-        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-        </script>';
-}
- ?>
-
-
 <!DOCTYPE html>
 
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
@@ -249,35 +70,18 @@ CONTENT="text/html; charset=UTF-8">
 
     var adsRequest = new google.ima.AdsRequest();
     adsRequest.adTagUrl = "http://ad.doubleclick.net/pfadx/AngelaSite;kw=html5linearnonlinear;sz=300x300;ord=5036130;dcmt=text/xml";
-
-    // Specify both the linear and nonlinear slot sizes. This helps the SDK to
-    // select the correct creative if multiple creatives are returned.
     adsRequest.linearAdSlotWidth = 640;
     adsRequest.linearAdSlotHeight = 400;
 
     adsRequest.nonLinearAdSlotWidth = 640;
     adsRequest.nonLinearAdSlotHeight = 150;
-
-    // Make request
     adsLoader.requestAds(adsRequest);
-
-    function onButtonClick()
-    {
-        alert ("YO!");
-        alert ("<?php 
-         $videoId = $_GET['video'];
-        echo $videoId . "<br />";
-        echo '<iframe src="http://www.youtube.com/embed/dP15zlyra3c?html5=1"></iframe>'; ?>");
-        }
-
-    
-    });
 </script>
 <script>
 </script>
 </head>
     
-<body data-spy="scroll" data-offset="61" data-target=".nav-collapse" oncontextmenu="return false" style="user-select: none;-webkit-touch-callout: none;
+<body data-spy="scroll" data-offset="61" <!--oncontextmenu="return false;"--> data-target=".nav-collapse" style="user-select: none;-webkit-touch-callout: none;
 -webkit-user-select: none;
 -khtml-user-select: none;
 -moz-user-select: none;
@@ -299,7 +103,7 @@ CONTENT="text/html; charset=UTF-8">
 						<ul class="nav">
 							<li><a href="#intro"><i class="icon-fire"><span>Intro</span></i></a></li>
 							<li><a href="#personal"><i class="icon-book"><span>Resume</span></i></a></li>
-							<li><a href="#service"><i class="icon-cogs"><span>Service</span></i></a></li>
+							<li><a href="#service"><i class="icon-cogs"><span>Skills</span></i></a></li>
 							<li><a href="#works"><i class="icon-suitcase"><span>Works</span></i></a></li>
 							<li><a href="#blog"><i class="icon-pencil"><span>Blog</span></i></a></li>
 							<li><a href="#contact"><i class="icon-envelope-alt"><span>Contact</span></i></a></li>
@@ -341,7 +145,7 @@ CONTENT="text/html; charset=UTF-8">
 						<img class="img-circle" src="img/me-low1.jpg" alt="*le me :)"/>
 						<h1>Rushabh Gosar</h1>
 						<hr>
-						<h3>I'm a student developer, working on Windows Phone, Windows 8 and Unity. Studying Game Design and Development at School of Interactive Games and Media @ Rochester Institute of Technology.  
+						<h3> I student developer interested in graphics, engine development and game design. Studying Game Design and Development at Rochester Institute of Technology.  
 						</h3>
 						<hr>
 					</div>
@@ -378,18 +182,69 @@ CONTENT="text/html; charset=UTF-8">
 								</div>
 							<!-- /Item Head end -->
 							<!-- first item of coll -->
+
+
+                            <div class="coll-item">
+                                <div class="coll-item-date">Sept 2013 - Present</div><!-- date -->
+                                <div class="coll-item-trigger">
+                                    <span class="icon-plus-sign" data-toggle="collapse" data-target="#job11"><i></i></span>
+                                </div>
+                                <div class="coll-arrow"><i></i></div>
+                                <!-- coll main content -->
+                                <div class="coll-item-content">
+                                    <h3 data-toggle="collapse" data-target="#job11">Graduate Assistant @ RIT</h3>
+                                    <div class="collapse in" id="Div1">
+                                        <p><small class="muted">Sept 2013 - Present</small></p>
+                                        <h4 class="media-heading primary-color">Unity gameplay programmer</h4>
+                                        <p>
+                                            Working on a SIMAD game for classroom students. Working on a MATLAB based simulink model on server side to provide data services for a educational client side game. The game is written in Unity3D, and I was incharge of making quick prototypes for the game implementation ideas. 
+											This educational game is going to be used by the company for imparting a better knowledge to middle school students.
+                                            <p />
+                                            Also a part of a research project for developing a new console. This research project started just recently, and will involved extensive use of C++, OpenGL and OpenCV.
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- /end of coll content -->
+                            </div>
+
+                            <div class="coll-item">
+                                <div class="coll-item-date">June 2014 - Aug 2014</div><!-- date -->
+                                <div class="coll-item-trigger">
+                                    <span class="icon-plus-sign" data-toggle="collapse" data-target="#job10"><i></i></span>
+                                </div>
+                                <div class="coll-arrow"><i></i></div>
+                                <!-- coll main content -->
+                                <div class="coll-item-content">
+                                    <h3 data-toggle="collapse" data-target="#job10">Co-op Programmer @ 1st Playable Productions</h3>
+                                    <div class="collapse in" id="Div1">
+                                        <p><small class="muted">June 2014 - Aug 2014</small></p>
+                                        <h4 class="media-heading primary-color">Co-op programmer</h4>
+                                        <p>
+											Achieved the successful implementation of some gameplay mechanics on a un-released game. This game was build for Nintendo DS & 3DS and it involved using C++ as the programming language using a in house proprietary engine. The game is already shipped and is waiting to be rated by the rating entities. 
+											<p />
+											Also played the role of a gameplay programmer / UI developer on another game on the Android Operating System. 
+											<p />
+											Towards the end of my term, I also wrote a tool for the artists and designer to simplify their process. This tool was written in C# and was used to generate a text file which could then be parsed by one of our tool for its in-game purpose. 
+                                        
+										</p>
+                                    </div>
+                                </div>
+                                <!-- /end of coll content -->
+                            </div>
+
+
 							<div class="coll-item">
 								<div class="coll-item-date"> Feb 2012 - Dec 2012</div><!-- date -->
 									<!-- coll item trigger -->
 									<div class="coll-item-trigger">
-										<span class="icon-minus-sign" data-toggle="collapse" data-target="#job1"><i></i></span>
+										<span class="icon-plus-sign" data-toggle="collapse" data-target="#job1"><i></i></span>
 									</div>
 									<!-- /end of coll item trigger -->
 									<div class="coll-arrow"><i></i></div>
 									<!-- coll main content -->
 									<div class="coll-item-content">
-										<h3 data-toggle="collapse" data-target="#job1">Chief Technology Officer @ GUID Softwares</h3>
-										<div class="collapse in" id="job1">
+										<h3 data-toggle="collapse" data-target="#job1">Developer @ GUID Softwares</h3>
+										<div class="collapse" id="job1">
 											<p><small class="muted">Feb 2012 - Dec 2012</small></p>
 											<h4 class="media-heading primary-color">Zoik it!</h4>
 											<p>Responsible for the development of the Windows Phone based application named Zoik It. Was in charge for the timely development, maintenance, quality control and deployment of the client applications for the Windows Phone and Windows 8. Windows Phone version has already been beta released on the market. Also responsible for business development tasks like pitching to investors, developing business model and financial model and business management that included recruitment of the development team. Was partly involved in developing the cloud backend for this Application using the APIs on Windows Azure.</p>
@@ -402,7 +257,7 @@ CONTENT="text/html; charset=UTF-8">
 
 							<!-- coll item -->
 							<div class="coll-item">
-								<div class="coll-item-date">2012 - present</div><!-- date -->
+								<div class="coll-item-date">2012 - June 2013</div><!-- date -->
 									<div class="coll-item-trigger">
 										<span class="icon-plus-sign" data-toggle="collapse" data-target="#job2"><i></i></span>
 									</div>
@@ -411,7 +266,7 @@ CONTENT="text/html; charset=UTF-8">
 									<div class="coll-item-content">
 										<h3 data-toggle="collapse" data-target="#job2">Freelance Trainer @ Edukinect, Hyderabad</h3>
 										<div class="collapse" id="job2">
-											<p><small class="muted">2012 - present</small></p>
+											<p><small class="muted">2012 - June 2013</small></p>
 											<h4 class="media-heading primary-color">Windows Phone, Windows 8, Azure</h4>
 											<p>A Trainer/Evangelist for technologies like Windows Phone, Windows 8, Azure and XNA. Have taken trainings at multiple places such as colleges, auditoriums and offices. College locations Salem, Tamil Nadu; Warangal, Hyderabad; VIT Chennai, Tamil Nadu; RK College Rajkot; and professional conference at Pondicherry TechDays. These week long trainings include hands on experience of the development environment and in-depth learning of the different APIs needed of the application development. Mentoring the students for publishing their applications on the Market was also a responsibility. This lead to increased fluency in application development on Integrated Development Environment, like Visual Studio along with strengthening of leadership, management & communication skills.</p>
 											<p><a href="http://edu-kinect.com" title="Company Website" class="noprint">&rarr; View website</a></p>
@@ -476,7 +331,7 @@ CONTENT="text/html; charset=UTF-8">
 										<div class="collapse in" id="edu1">
 											<p><small class="muted">Fall 2013</small></p>
 											<h4 class="media-heading primary-color">Rochester Institute of Technology, New York.</h4>
-											<p>Completed first Semester with GPA 4.0. Now studying more about 3D Modelling, Artificial Intelligence for Game Environments, Digital Audio Production and Synthesis, and Game Graphics Programming with DirectX 11. Also a Graduate Assistant at School of Interactive Games and Media, working on a Unity based project. </p>
+											<p>Just admitted! Enrolled for the Game Development Processes, Gameplay and prototyping, Game Design and Colloquium courses. Also a Graduate Assistant at School of Interactive Games and Media, working on a Unity based project. </p>
 											<p><a href="http://igm.rit.edu" title="" class="noprint">&rarr;website</a></p>
 										</div>
 								    </div>
@@ -533,15 +388,15 @@ CONTENT="text/html; charset=UTF-8">
 			<section id="service" class="section mtcon">
 				<!-- heading -->
 				<div class="row">
-					<h2 class="mtcon-title">Services</h2>
-					<div class="span8 short-dec">
-						<p> A first year graduate student, learning more about Game Design and Development. Learning more about DirectX 11, Artificial Intelligence and Digital Audio Production. More recent work can be found on blog and you may also view my github and bitbucket page for projects. I am an Independent learner, who is always ready to try out new things.</p><p> 
+					<h2 class="mtcon-title">Skills</h2>
+					<!--<div class="span8 short-dec">
+						<p>A recent graduate with experience in training and development on .NET Framework including Windows Phone, Windows 8 and Windows Azure and also have basic knowledge Android, JAVA for Nokia S40 and Python. I have also developed web APIs using PHP & MySQL and games using XNA Game studio. I am an Independent learner, who is always ready to try out new things.</p><p> 
                     <br /> You can download my <a href="/resume_rushabhgosar.pdf"> Resume </a> or can view my <a href="http://in.linkedin.com/in/rushabhgosar">LinkedIn Profile</a><a href="rushabh_linkedin.pdf"> (pdf)</a> to get more detailed information about my work and view my recommendations.</p>
-					</div>
+					</div>-->
 				</div>	
 				<!-- /heading -->
 				<!-- service content -->
-				<div class="row service">
+			<!--	<div class="row service">
 					<div class="box">
 						<img src="img/services/XNA-logo-low.jpg" alt="XNA 4.0 Game Studio Refresh">
 						<h2 style="text-align:center">XNA</h2>
@@ -558,11 +413,11 @@ CONTENT="text/html; charset=UTF-8">
 						<p>Windows Phone is the most comfortable Phone development platform for me. In most of my previous work experiences I have extensivley worked on windows phone which has led to a very intrinsic understanding of the Windows Phone platform. I am currently exploring the new libraries and APIs made available to the developers in the new Windwos Phone 8. The apps I make are mostly dynamic and use Windows Azure as Cloud Backend. 
                     
 					</div>
-				</div>
+				</div>-->
 				<!-- /service content end -->
 				<!-- skills -->
 				<div class="row skills">
-					<h2 class="mtcon-title">Skills</h2>
+					<!--<h2 class="mtcon-title">Skills</h2>-->
 					<div class="span8">
 						<h4>C#</h4>
 							<div class="progress-bar blue stripes shine">
@@ -606,9 +461,9 @@ CONTENT="text/html; charset=UTF-8">
 	                <div id="options" class="clearfix">
 	                    <ul id="filters" class="option-set clearfix" data-option-key="filter">
 	                        <li><a href="#filter" data-option-value="*" class="selected">all works</a></li>
-	                        <li><a href="#filter" data-option-value=".webdesign">windows phone</a></li>
-	                        <li><a href="#filter" data-option-value=".uidesign">windows 8</a></li>
-	                        <li><a href="#filter" data-option-value=".branding">XNA</a></li>     
+	                        <li><a href="#filter" data-option-value=".webdesign">windows phone / Windows 8</a></li>
+	                        <li><a href="#filter" data-option-value=".uidesign">Unity</a></li>
+	                        <li><a href="#filter" data-option-value=".branding">XNA & DirectX</a></li>     
 	                      <!--  <li><a href="#filter" data-option-value=".logodesign">logodesign</a></li>-->
 	                        <li><a href="#filter" data-option-value=".illustration">trainings</a></li>
 	                       	<li><a href="#filter" data-option-value=".photography">API</a></li>
@@ -619,11 +474,11 @@ CONTENT="text/html; charset=UTF-8">
 
                     <!--Index
                     webdesign = WP              Zoik it + Media Locker + 
-                    uidesign =  Windows 8              Immunity Buster
-                    branding = Games        Metronome
+                    uidesign =  Unity           Immunity Buster
+                    branding = Games			Metronome
                     logodesign = Azure          W Cloud
                     illustration = Trainings    Images
-                    photography = API          None per se. 
+                    photography = API           None per se. 
                     -->
 	                <div id="portfolio" class="clearfix"> 
 									
@@ -641,6 +496,7 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>An application that allows a user to connect to others of their same interest. Built on Windows Phone, now being developed on Windows 8, iOS, Android and Web. </p>
                             </div>
 						</div>
+
 						<div class="block webdesign">
 							<div class="view view-first">
 								<div class="tringle"></div>
@@ -655,7 +511,8 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>This is a Windows Phone based application that allows user to hide the photos and allows added functionality like spy cam, editing, upload, Skydrive and bulk import.</p>
                             </div>
 						</div>
-                        <div class="block branding">
+
+                        <div class="block uidesign">
 							<div class="view view-first">
 								<div class="tringle"></div>
 								<img src="img/games/RALPH.jpg" alt="RALPH">
@@ -669,7 +526,8 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>Existential Cooking Crises is a game built on Unity3d in which the player plays as R.A.L.P.H., a semi-sentient domestic helper bot, who is subjected to a series of illogic... </p>
                             </div>
 						</div>		
-                        <div class="block branding">
+
+                        <div class="block uidesign">
 							<div class="view view-first">
 								<div class="tringle"></div>
 								<img src="img/games/RobinHood.jpg" alt="Fight against AIDS">
@@ -683,6 +541,7 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>You play as “Johnny” a little boy who dressed up as Robin Hood for Halloween. Johnny has heard that some children get more candy on Halloween than other children and has taken it upon himself..</p>
                             </div>
 						</div>		
+
                         <div class="block branding">
 							<div class="view view-first">
 								<div class="tringle"></div>
@@ -697,10 +556,11 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>Our game, Stir Fry Friday, was created using XNA in combination with the Surface SDK. you play as a chef who is creating a stir fry dish. Vegetables and pieces of meat will fall from the top and you will have to flip them and stir fry.. </p>
                             </div>
 						</div>		
-                        <div class="block branding">
+
+                        <div class="block uidesign">
 							<div class="view view-first">
 								<div class="tringle"></div>
-								<img src="img/games/LH.jpg" alt="Fight against AIDS">
+								<img src="img/games/LH.jpg" alt="Little Red Riding hood, with horror! ">
 								<div class="mask">
 									<a class="info"  onclick="onButtonClick()" href="http://rushabhgosar.com/test/LondonHollows/"></a>
 									<!--<a class="link" href="http://blog.rushabhgosar.com/blog/2012/05/04/immunity-buster-2-whats-new/"></a>-->
@@ -711,10 +571,11 @@ CONTENT="text/html; charset=UTF-8">
                                 <p>This is a first-person horror game based on the story of Little Red Riding Hood. The player gets hints and clues to collect items for the grandmother, however keeping away from the werewolf. The models used are all made by the team..</p>
                             </div>
 						</div>		
+
 						<div class="block branding">
 							<div class="view view-first">
 								<div class="tringle"></div>
-								<img src="img/work/1/IB_small-low.jpg" alt="Fight against AIDS">
+                                <img src="img/work/1/IB_small-low.jpg" alt="Our Fight against HIV/AIDS">
 								<div class="mask">
 									<a class="info"  onclick="onButtonClick()" href="http://rushabhgosar.com/index.php?type=video&id=I4wrVt8jVzs"></a>
 									<a class="link" href="http://blog.rushabhgosar.com/blog/2012/05/04/immunity-buster-2-whats-new/"></a>
@@ -726,20 +587,20 @@ CONTENT="text/html; charset=UTF-8">
                             </div>
 						</div>		
 
-						<div class="block uidesign">
-							<div class="view view-first">
-								<div class="tringle"></div>
-								<img src="img/work/2/m_small.jpg" alt="For Guitar Learners. ">
-								<div class="mask" >
-									<a class="info" data-rel="prettyPhoto" href="img/big/m_large.jpg" ></a>
-									<a class="link" href="http://apps.microsoft.com/windows/en-us/app/metronome/c50c0d7e-cee7-4189-8219-874354795f6f"></a>
-								</div>
-							</div>
-							<div class="des">
+                        <div class="block webdesign">
+                            <div class="view view-first">
+                                <div class="tringle"></div>
+                                <img src="img/work/2/m_small.jpg" alt="For Guitar Learners. ">
+                                <div class="mask">
+                                    <a class="info" data-rel="prettyPhoto" href="img/big/m_large.jpg"></a>
+                                    <a class="link" href="http://apps.microsoft.com/windows/en-us/app/metronome/c50c0d7e-cee7-4189-8219-874354795f6f"></a>
+                                </div>
+                            </div>
+                            <div class="des">
                                 <h4>Metronome</h4>
                                 <p>A Windows 8 application for Guitarists to learn rhythm in music learning process. The application animates a moving object to indicate the tick sound. </p><br /><br /><br />
                             </div>
-						</div>	
+                        </div>	
 
 						<div class="block logodesign">
 							<div class="view view-first">
@@ -824,8 +685,10 @@ CONTENT="text/html; charset=UTF-8">
 				<!-- /heading -->
 				<div class="row">
 					<div class="blog">
-                        <!-- normal post -->
-						<div class="block">
+
+
+
+                        <div class="block">
 							<div class="view view-first">
 								<div class="tringle"></div>
 								<img class="lazy" data-original="img/work/GTA5-low.jpg" src="img/work/GTA5-low.jpg" alt="XtremeGames">
@@ -849,8 +712,6 @@ CONTENT="text/html; charset=UTF-8">
                                 </div>--><!-- .meta end-->                                  
                             </div><!-- .des end-->
 						</div><!-- .block end-->
-						<!-- /normal post end-->
-
 
 					    <!-- normal post -->
 						<div class="blog" lang="en" xml:lang="en">
@@ -918,7 +779,9 @@ CONTENT="text/html; charset=UTF-8">
 						<!-- .block end-->						
 						<!--/ video post end -->
 
-					 
+					    <!-- normal post -->
+						
+						<!-- /normal post end-->
 
 					</div>
 				</div>
