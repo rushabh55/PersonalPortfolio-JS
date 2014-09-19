@@ -216,7 +216,7 @@ CONTENT="text/html; charset=UTF-8">
                                 <!-- coll main content -->
                                 <div class="coll-item-content">
                                     <h3 data-toggle="collapse" data-target="#job10">Co-op Programmer @ 1st Playable Productions</h3>
-                                    <div class="collapse" id="job10">
+                                    <div class="collapse in" id="Div1">
                                         <p><small class="muted">June 2014 - Aug 2014</small></p>
                                         <h4 class="media-heading primary-color">Co-op programmer</h4>
                                         <p>
