@@ -89,10 +89,10 @@ var $map = $('#map-content');
     if( $map.length ) {
 
       $map.gMap({
-        address: '224 Crittenden Way, Apt 4, Rochester, NY, 14623, United States',
+        address: '14 Crittenden Way, Apt 6, Rochester, NY, 14623, United States',
         zoom: 14,
         markers: [
-          { 'address': '224 Crittenden Way, Apt 4, Rochester, NY, 14623, United States', }
+          { 'address': '14 Crittenden Way, Apt 6, Rochester, NY, 14623, United States', }
         ]
       });
 
